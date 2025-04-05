@@ -21,7 +21,7 @@ export default function Index() {
 
       {/* Render QR code only if qrValue is set */}
       {qrValue ? (
-        <QRCode value={qrValue} size={200} style={styles.qrCode} />
+        <QRCode value={qrValue} size={200}/>
       ) : null}
     </View>
   );

@@ -20,35 +20,35 @@ export default function ProfileScreen() {
         style={styles.input}
         placeholder="Name"
         placeholderTextColor="#ccc"
-        value={inputs.input1}
+        value={inputs.Name}
         onChangeText={(text) => handleInputChange('input1', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Date of Birth"
         placeholderTextColor="#ccc"
-        value={inputs.input2}
+        value={inputs.DOB}
         onChangeText={(text) => handleInputChange('input2', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Phone #"
         placeholderTextColor="#ccc"
-        value={inputs.input3}
+        value={inputs.Phone}
         onChangeText={(text) => handleInputChange('input3', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Adress"
         placeholderTextColor="#ccc"
-        value={inputs.input4}
+        value={inputs.Adress}
         onChangeText={(text) => handleInputChange('input4', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Emergency Contacts"
         placeholderTextColor="#ccc"
-        value={inputs.input5}
+        value={inputs.EmContact}
         onChangeText={(text) => handleInputChange('input5', text)}
       />
     </View>
