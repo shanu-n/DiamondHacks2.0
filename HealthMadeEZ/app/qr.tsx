@@ -10,7 +10,11 @@ export default function QRScreen() {
     try {
       const savedProfile = await AsyncStorage.getItem('profileInputs');
       if (savedProfile) {
-        setQrValue(savedProfile);
+        // setQrValue(savedProfile);
+           let payload =
+          "https://nandiraju.github.io/qr_scanner/index.html?data=" +
+          encodeURIComponent(savedProfile);
+        setQrValue(payload);
       } else {
         alert('No profile data found!');
       }
