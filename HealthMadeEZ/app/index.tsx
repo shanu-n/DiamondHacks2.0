@@ -1,6 +1,6 @@
-import React from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
+import React from "react";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function Index() {
   const router = useRouter();
@@ -8,14 +8,30 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to MakeHealthEZ!</Text>
-      <Text style={styles.subtitle}>Skip the ER Paperwork. Save Time. Save Lives.</Text>
+      <Text style={styles.subtitle}>
+        Skip the ER Paperwork. Save Time. Save Lives.
+      </Text>
 
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/qr')}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push("/qr")}
+      >
         <Text style={styles.buttonText}>Show QR Code</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/profile')}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push("/profile")}
+      >
         <Text style={styles.buttonText}>Profile</Text>
+      </TouchableOpacity>
+
+      {/* 🚀 New Button to Upload Medical Documents */}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push("/healthrecord")}
+      >
+        <Text style={styles.buttonText}>Important Documents</Text>
       </TouchableOpacity>
     </View>
   );
@@ -24,34 +40,34 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#7290b5',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#7290b5",
+    alignItems: "center",
+    justifyContent: "center",
     padding: 24,
   },
   title: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 12,
-    textAlign: 'center',
+    textAlign: "center",
   },
   subtitle: {
-    color: '#f0f0f0',
+    color: "#f0f0f0",
     fontSize: 16,
     marginBottom: 32,
-    textAlign: 'center',
+    textAlign: "center",
   },
   button: {
-    backgroundColor: '#5b7aa1',
+    backgroundColor: "#5b7aa1",
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 8,
     marginVertical: 10,
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
