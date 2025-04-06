@@ -70,7 +70,7 @@ export default function ProfileScreen() {
         placeholder="Adress"
         placeholderTextColor="#ccc"
         value={inputs.Adress}
-        onChangeText={(text) => handleInputChange('Address', text)}
+        onChangeText={(text) => handleInputChange('Adress', text)}
       />
       <TextInput
         style={styles.input}
