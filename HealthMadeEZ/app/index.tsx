@@ -1,38 +1,22 @@
-import React, { useState } from 'react'; // Import React and useState
-import { Text, View, StyleSheet, TextInput } from 'react-native';
-import { Link } from 'expo-router'; // Import Link from expo-router
+import React from 'react';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 export default function Index() {
-  const [phoneNumber, setPhoneNumber] = useState(''); // State for phone number input
-
-  // Regular expression to match a valid phone number (optional +, and digits)
-  const handlePhoneNumberChange = (text: string) => {
-    // Allow only digits and an optional "+" at the beginning
-    const phoneNumberRegex = /^[+]?[0-9]*$/;
-
-    if (phoneNumberRegex.test(text)) {
-      setPhoneNumber(text); // Update state if the input is valid
-    }
-  };
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Sign In to Health Made EZ</Text>
+      <Text style={styles.title}>Welcome to MakeHealthEZ!</Text>
+      <Text style={styles.subtitle}>Skip the ER Paperwork. Save Time. Save Lives.</Text>
 
-      {/* Phone number input field */}
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your phone number"
-        placeholderTextColor="#ccc"
-        value={phoneNumber}
-        onChangeText={handlePhoneNumberChange} // Handle phone number change
-        keyboardType="phone-pad" // Ensure phone number keypad
-      />
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/qr')}>
+        <Text style={styles.buttonText}>Show QR Code</Text>
+      </TouchableOpacity>
 
-      {/* Link to navigate to the welcome page */}
-      <Link href="/welcome" style={styles.button}>
-        Go to Welcome Page
-      </Link>
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/profile')}>
+        <Text style={styles.buttonText}>Profile</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -40,32 +24,34 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    fontSize: 30,
     backgroundColor: '#7290b5',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20, // Add padding for better spacing
+    padding: 24,
   },
-  text: {
+  title: {
     color: '#fff',
-    fontSize: 24,
-    marginBottom: 20,
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  subtitle: {
+    color: '#f0f0f0',
+    fontSize: 16,
+    marginBottom: 32,
+    textAlign: 'center',
   },
   button: {
-    fontSize: 20,
-    textDecorationLine: 'underline',
-    color: '#fff',
-    marginTop: 20, // Add some space above the button
-  },
-  input: {
-    width: '100%',
-    padding: 12,
-    marginVertical: 8,
     backgroundColor: '#5b7aa1',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
     borderRadius: 8,
-    borderColor: '#fff',
-    borderWidth: 1,
+    marginVertical: 10,
+  },
+  buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: '600',
   },
 });

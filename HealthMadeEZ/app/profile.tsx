@@ -1,20 +1,18 @@
-import { Text, View, StyleSheet, TextInput } from 'react-native';
-import { useState } from 'react';
+// app/profile.tsx
+import React, { useState, useEffect } from 'react';
+import { Text, View, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect } from 'react';
-
-
 
 export default function ProfileScreen() {
   const [inputs, setInputs] = useState({
     Name: '',
-    DOB: '', 
+    DOB: '',
     Phone: '',
-    Adress: '',
+    Address: '',
     EmContact: '',
   });
 
-    useEffect(() => {
+  useEffect(() => {
     const loadInputs = async () => {
       try {
         const savedInputs = await AsyncStorage.getItem('profileInputs');
@@ -25,25 +23,27 @@ export default function ProfileScreen() {
         console.error("Failed to load profile inputs", error);
       }
     };
-  
     loadInputs();
   }, []);
-  
 
-  const handleInputChange = async (name: string, value: string) => {
-    const updatedInputs = { ...inputs, [name]: value };
-    setInputs(updatedInputs);
+  const handleInputChange = (name: string, value: string) => {
+    setInputs({ ...inputs, [name]: value });
+  };
+
+  const handleSaveProfile = async () => {
     try {
-      await AsyncStorage.setItem('profileInputs', JSON.stringify(updatedInputs));
+      await AsyncStorage.setItem('profileInputs', JSON.stringify(inputs));
+      Alert.alert("Success", "Profile saved successfully!");
     } catch (error) {
       console.error("Failed to save profile inputs", error);
+      Alert.alert("Error", "Failed to save profile.");
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Profile Screen</Text>
-      {/* Input Fields */}
+      <Text style={styles.title}>Your Profile</Text>
+
       <TextInput
         style={styles.input}
         placeholder="Name"
@@ -60,25 +60,30 @@ export default function ProfileScreen() {
       />
       <TextInput
         style={styles.input}
-        placeholder="Phone #"
+        placeholder="Phone"
         placeholderTextColor="#ccc"
+        keyboardType="phone-pad"
         value={inputs.Phone}
         onChangeText={(text) => handleInputChange('Phone', text)}
       />
       <TextInput
         style={styles.input}
-        placeholder="Adress"
+        placeholder="Address"
         placeholderTextColor="#ccc"
-        value={inputs.Adress}
-        onChangeText={(text) => handleInputChange('Adress', text)}
+        value={inputs.Address}
+        onChangeText={(text) => handleInputChange('Address', text)}
       />
       <TextInput
         style={styles.input}
-        placeholder="Emergency Contacts"
+        placeholder="Emergency Contact"
         placeholderTextColor="#ccc"
         value={inputs.EmContact}
         onChangeText={(text) => handleInputChange('EmContact', text)}
       />
+
+      <View style={styles.buttonContainer}>
+        <Button title="Save Profile" onPress={handleSaveProfile} color="#fff" />
+      </View>
     </View>
   );
 }
@@ -89,10 +94,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#7290b5',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
   },
-  text: {
+  title: {
     color: '#fff',
-    fontSize: 24,
+    fontSize: 26,
+    marginBottom: 20,
   },
   input: {
     width: '100%',
@@ -104,5 +111,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     color: '#fff',
     fontSize: 16,
+  },
+  buttonContainer: {
+    marginTop: 20,
+    backgroundColor: '#406080',
+    borderRadius: 8,
+    overflow: 'hidden',
   },
 });

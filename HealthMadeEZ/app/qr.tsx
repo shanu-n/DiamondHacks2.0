@@ -1,34 +1,37 @@
-// app/qr.tsx
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+// app/qr.tsx (or app/welcome.tsx depending on your setup)
+import React, { useState, useEffect } from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function QRScreen() {
-  const [input, setInput] = useState('');
   const [qrValue, setQrValue] = useState('');
 
-  const handleGenerateQR = () => {
-    if (input) {
-      setQrValue(input);  // Update QR code value with the user input
+  const loadProfileAndGenerateQR = async () => {
+    try {
+      const savedProfile = await AsyncStorage.getItem('profileInputs');
+      if (savedProfile) {
+        // Optionally, you could encrypt this JSON string before setting it:
+        setQrValue(savedProfile);
+      } else {
+        alert('No profile data found!');
+      }
+    } catch (error) {
+      console.error('Error loading profile:', error);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Generate Dynamic QR Code</Text>
-      
-      <TextInput
-        style={styles.input}
-        placeholder="Enter text or URL"
-        value={input}
-        onChangeText={setInput}
-      />
-      <Button title="Generate QR" onPress={handleGenerateQR} />
+      <Text style={styles.title}>Your ER QuickPass QR</Text>
+      <Button title="Show QR Code" onPress={loadProfileAndGenerateQR} />
 
       {qrValue ? (
-        <QRCode value={qrValue} size={200} />
+        <View style={styles.qrContainer}>
+          <QRCode value={qrValue} size={200} />
+        </View>
       ) : (
-        <Text style={styles.message}>Enter something above to generate a QR code</Text>
+        <Text style={styles.hint}>Click the button to generate your QR code.</Text>
       )}
     </View>
   );
@@ -37,25 +40,25 @@ export default function QRScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#7290b5',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
   title: {
-    fontSize: 22,
+    color: '#fff',
+    fontSize: 24,
     marginBottom: 20,
   },
-  input: {
-    width: '100%',
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingLeft: 10,
-  },
-  message: {
-    marginTop: 20,
+  hint: {
+    color: '#eee',
     fontSize: 16,
-    color: '#888',
+    marginTop: 20,
+  },
+  qrContainer: {
+    marginTop: 20,
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 10,
   },
 });
