@@ -1,152 +1,133 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Image, Button, StyleSheet, Alert } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 
-export default function healthrecord() {
-  const [images, setImages] = useState({
-    insuranceCard: "",
-    driversLicense: "",
-    medicalHistory: "", // ✅ New field
+const imageKeys = ['insuranceCard', 'driversLicense', 'medicalHistory'] as const;
+type ImageType = (typeof imageKeys)[number];
+
+export default function UploadMedicalDocuments() {
+  const [images, setImages] = useState<{
+    insuranceCard: string | null;
+    driversLicense: string | null;
+    medicalHistory: string | null;
+  }>({
+    insuranceCard: null,
+    driversLicense: null,
+    medicalHistory: null,
   });
 
-  useEffect(() => {
-    const loadImages = async () => {
-      try {
-        const savedImages = await AsyncStorage.getItem("uploadedImages");
-        if (savedImages) {
-          setImages(JSON.parse(savedImages));
-        }
-      } catch (error) {
-        console.error("Failed to load images", error);
-      }
-    };
-    loadImages();
-  }, []);
-
-  const pickImage = async (
-    type: "insuranceCard" | "driversLicense" | "medicalHistory"
-  ) => {
+  const pickImage = async (type: ImageType) => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert("Permission denied", "Camera roll permission is required.");
+    if (status !== 'granted') {
+      alert('Permission to access media library is required!');
       return;
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      quality: 0.8,
+      quality: 1,
     });
 
-    if (!result.canceled && result.assets.length > 0) {
-      const uri = result.assets[0].uri;
-      setImages((prev) => ({ ...prev, [type]: uri }));
-    }
-  };
-
-  const saveImages = async () => {
-    try {
-      await AsyncStorage.setItem("uploadedImages", JSON.stringify(images));
-      Alert.alert("Success", "Images saved successfully!");
-    } catch (error) {
-      console.error("Failed to save images", error);
-      Alert.alert("Error", "Failed to save images.");
+    if (!result.canceled) {
+      setImages({ ...images, [type]: result.assets[0].uri });
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Upload Documents</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.header}>Upload Medical Documents</Text>
 
-      {/* Insurance Card Section */}
-      <View style={styles.uploadSection}>
-        <Text style={styles.label}>Insurance Card</Text>
-        {images.insuranceCard ? (
-          <Image source={{ uri: images.insuranceCard }} style={styles.image} />
-        ) : (
-          <Text style={styles.placeholder}>No image selected</Text>
-        )}
-        <Button
-          title="Upload Insurance Card"
-          onPress={() => pickImage("insuranceCard")}
-        />
-      </View>
+      {imageKeys.map((type) => (
+        <View key={type} style={styles.uploadSection}>
+          <Text style={styles.label}>
+            {type === 'insuranceCard' && 'Insurance Card'}
+            {type === 'driversLicense' && "Driver's License"}
+            {type === 'medicalHistory' && 'Medical History'}
+          </Text>
 
-      {/* Driver’s License Section */}
-      <View style={styles.uploadSection}>
-        <Text style={styles.label}>Driver's License</Text>
-        {images.driversLicense ? (
-          <Image source={{ uri: images.driversLicense }} style={styles.image} />
-        ) : (
-          <Text style={styles.placeholder}>No image selected</Text>
-        )}
-        <Button
-          title="Upload Driver's License"
-          onPress={() => pickImage("driversLicense")}
-        />
-      </View>
+          {images[type] ? (
+            // Conditional rendering to avoid passing `null` to the Image component
+            <Image source={{ uri: images[type] as string }} style={styles.image} />
+          ) : (
+            <Text style={styles.placeholder}>No image selected</Text>
+          )}
 
-      {/* ✅ Medical History Section */}
-      <View style={styles.uploadSection}>
-        <Text style={styles.label}>Medical History</Text>
-        {images.medicalHistory ? (
-          <Image source={{ uri: images.medicalHistory }} style={styles.image} />
-        ) : (
-          <Text style={styles.placeholder}>No image selected</Text>
-        )}
-        <Button
-          title="Upload Medical History"
-          onPress={() => pickImage("medicalHistory")}
-        />
-      </View>
-
-      <View style={styles.saveButton}>
-        <Button title="Save Documents" onPress={saveImages} color="#fff" />
-      </View>
-    </View>
+          <TouchableOpacity style={styles.button} onPress={() => pickImage(type)}>
+            <Text style={styles.buttonText}>
+              Upload{' '}
+              {type === 'medicalHistory'
+                ? 'Medical History'
+                : type === 'insuranceCard'
+                ? 'Insurance Card'
+                : "Driver's License"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ))}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#7290b5",
     padding: 20,
-    justifyContent: "center",
+    paddingBottom: 40,
+    backgroundColor: '#F8FAFC',
   },
-  title: {
-    fontSize: 26,
-    color: "#fff",
-    textAlign: "center",
+  header: {
+    fontSize: 24,
+    fontWeight: '600',
     marginBottom: 20,
+    textAlign: 'center',
+    color: '#1E3A8A', // Dark healthcare blue
   },
   uploadSection: {
-    marginBottom: 30,
-    alignItems: "center",
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
   },
   label: {
-    fontSize: 18,
-    color: "#fff",
+    fontSize: 16,
+    fontWeight: '500',
     marginBottom: 10,
+    color: '#0F172A',
   },
   image: {
-    width: 200,
-    height: 120,
+    width: '100%',
+    height: 200,
+    borderRadius: 12,
     marginBottom: 10,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: "#fff",
+    resizeMode: 'cover',
   },
   placeholder: {
-    color: "#ccc",
+    fontSize: 14,
+    color: '#64748B',
     marginBottom: 10,
+    fontStyle: 'italic',
   },
-  saveButton: {
-    backgroundColor: "#406080",
-    borderRadius: 8,
-    overflow: "hidden",
-    alignSelf: "center",
-    marginTop: 10,
+  button: {
+    backgroundColor: '#3B82F6', // Healthcare blue
+    paddingVertical: 10,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
