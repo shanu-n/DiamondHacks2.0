@@ -1,5 +1,10 @@
 import { Text, View, StyleSheet, TextInput } from 'react-native';
 import { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from 'react';
+
+
+
 export default function ProfileScreen() {
   const [inputs, setInputs] = useState({
     Name: '',
@@ -9,9 +14,32 @@ export default function ProfileScreen() {
     EmContact: '',
   });
 
-  const handleInputChange = (name: string, value: string) => {
-    setInputs({ ...inputs, [name]: value });
-  }
+    useEffect(() => {
+    const loadInputs = async () => {
+      try {
+        const savedInputs = await AsyncStorage.getItem('profileInputs');
+        if (savedInputs) {
+          setInputs(JSON.parse(savedInputs));
+        }
+      } catch (error) {
+        console.error("Failed to load profile inputs", error);
+      }
+    };
+  
+    loadInputs();
+  }, []);
+  
+
+  const handleInputChange = async (name: string, value: string) => {
+    const updatedInputs = { ...inputs, [name]: value };
+    setInputs(updatedInputs);
+    try {
+      await AsyncStorage.setItem('profileInputs', JSON.stringify(updatedInputs));
+    } catch (error) {
+      console.error("Failed to save profile inputs", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Profile Screen</Text>
@@ -21,35 +49,35 @@ export default function ProfileScreen() {
         placeholder="Name"
         placeholderTextColor="#ccc"
         value={inputs.Name}
-        onChangeText={(text) => handleInputChange('input1', text)}
+        onChangeText={(text) => handleInputChange('Name', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Date of Birth"
         placeholderTextColor="#ccc"
         value={inputs.DOB}
-        onChangeText={(text) => handleInputChange('input2', text)}
+        onChangeText={(text) => handleInputChange('DOB', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Phone #"
         placeholderTextColor="#ccc"
         value={inputs.Phone}
-        onChangeText={(text) => handleInputChange('input3', text)}
+        onChangeText={(text) => handleInputChange('Phone', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Adress"
         placeholderTextColor="#ccc"
         value={inputs.Adress}
-        onChangeText={(text) => handleInputChange('input4', text)}
+        onChangeText={(text) => handleInputChange('Address', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Emergency Contacts"
         placeholderTextColor="#ccc"
         value={inputs.EmContact}
-        onChangeText={(text) => handleInputChange('input5', text)}
+        onChangeText={(text) => handleInputChange('EmContact', text)}
       />
     </View>
   );
