@@ -1,6 +1,6 @@
 // app/profile.tsx
 import React, { useState, useEffect } from 'react';
-import { Text, View, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { Text, View, TextInput, Button, StyleSheet, Alert, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen() {
@@ -41,27 +41,27 @@ export default function ProfileScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Your Profile</Text>
 
       <TextInput
         style={styles.input}
         placeholder="Name"
-        placeholderTextColor="#ccc"
+        placeholderTextColor="#888"
         value={inputs.Name}
         onChangeText={(text) => handleInputChange('Name', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Date of Birth"
-        placeholderTextColor="#ccc"
+        placeholderTextColor="#888"
         value={inputs.DOB}
         onChangeText={(text) => handleInputChange('DOB', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Phone"
-        placeholderTextColor="#ccc"
+        placeholderTextColor="#888"
         keyboardType="phone-pad"
         value={inputs.Phone}
         onChangeText={(text) => handleInputChange('Phone', text)}
@@ -69,14 +69,14 @@ export default function ProfileScreen() {
       <TextInput
         style={styles.input}
         placeholder="Address"
-        placeholderTextColor="#ccc"
+        placeholderTextColor="#888"
         value={inputs.Address}
         onChangeText={(text) => handleInputChange('Address', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Emergency Contact"
-        placeholderTextColor="#ccc"
+        placeholderTextColor="#888"
         value={inputs.EmContact}
         onChangeText={(text) => handleInputChange('EmContact', text)}
       />
@@ -84,38 +84,40 @@ export default function ProfileScreen() {
       <View style={styles.buttonContainer}>
         <Button title="Save Profile" onPress={handleSaveProfile} color="#fff" />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#7290b5',
-    justifyContent: 'center',
+    paddingTop: 60,
+    paddingBottom: 40,
+    backgroundColor: '#f6faff',
     alignItems: 'center',
-    padding: 20,
+    paddingHorizontal: 20,
   },
   title: {
-    color: '#fff',
+    color: '#1e3a5f',
     fontSize: 26,
-    marginBottom: 20,
+    fontWeight: '600',
+    marginBottom: 30,
   },
   input: {
     width: '100%',
-    padding: 12,
-    marginVertical: 8,
-    backgroundColor: '#5b7aa1',
-    borderRadius: 8,
-    borderColor: '#fff',
+    padding: 14,
+    marginVertical: 10,
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
     borderWidth: 1,
-    color: '#fff',
+    borderColor: '#d0e1f9',
     fontSize: 16,
+    color: '#1e3a5f',
   },
   buttonContainer: {
     marginTop: 20,
-    backgroundColor: '#406080',
-    borderRadius: 8,
+    backgroundColor: '#3f72af',
+    borderRadius: 12,
     overflow: 'hidden',
+    width: '100%',
   },
 });
